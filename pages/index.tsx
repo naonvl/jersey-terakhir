@@ -10,6 +10,8 @@ import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
 import { Canvas } from '@react-three/fiber'
+import { Shirt } from '@components/Objects'
+import { Environment, ContactShadows, OrbitControls } from '@react-three/drei'
 
 const jerseyStyles = [
   {
@@ -150,8 +152,40 @@ const Home: NextPage = () => {
 
       <div className="flex px-4 lg:px-16 flex-col lg:flex-row">
         <div className="lg:w-1/2">
+          {/* Mobile */}
           <div className="my-5 lg:hidden">
-            <div className="h-[500px] w-full bg-gray-500"></div>
+            <Canvas
+              shadows
+              camera={{ position: [0, 60, 4], fov: 50 }}
+              style={{ height: '300px' }}
+            >
+              <ambientLight intensity={0.7} />
+              <spotLight
+                intensity={0.5}
+                angle={0.5}
+                penumbra={1}
+                position={[10, 50, 10]}
+                castShadow
+              />
+              <Suspense fallback={null}>
+                <Shirt />
+                {/* <Shoe /> */}
+                <Environment preset="city" />
+                <ContactShadows
+                  position={[0, -0.8, 0]}
+                  opacity={0.25}
+                  scale={10}
+                  blur={1.5}
+                  far={0.8}
+                />
+              </Suspense>
+              <OrbitControls
+                minPolarAngle={Math.PI / 2.8}
+                maxPolarAngle={Math.PI / 1.7}
+                enableZoom={false}
+                enablePan={false}
+              />
+            </Canvas>
           </div>
 
           <div className="mb-3 mt-5">
@@ -503,23 +537,33 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
-          <Canvas
-            camera={{
-              position: [-6, 7, 7],
-            }}
-            style={{
-              background: '#171717',
-            }}
-          >
-            <ambientLight intensity={1} />
+          <Canvas shadows camera={{ position: [0, 60, 4], fov: 50 }}>
+            <ambientLight intensity={0.7} />
             <spotLight
               intensity={0.5}
-              angle={0.1}
+              angle={0.5}
               penumbra={1}
-              position={[10, 15, 10]}
+              position={[10, 50, 10]}
               castShadow
             />
-            <Suspense fallback={null}>{/* <Shirt /> */}</Suspense>
+            <Suspense fallback={null}>
+              <Shirt />
+              {/* <Shoe /> */}
+              <Environment preset="city" />
+              <ContactShadows
+                position={[0, -0.8, 0]}
+                opacity={0.25}
+                scale={10}
+                blur={1.5}
+                far={0.8}
+              />
+            </Suspense>
+            <OrbitControls
+              minPolarAngle={Math.PI / 2.8}
+              maxPolarAngle={Math.PI / 1.7}
+              enableZoom={false}
+              enablePan={false}
+            />
           </Canvas>
         </div>
       </div>
