@@ -45,10 +45,10 @@ function Shirt(props: JSX.IntrinsicElements['group']) {
     texture.needsUpdate = true
     texture.flipY = false
 
-    fabric.loadSVGFromURL('/textures/Jersey_COLOR.svg', (objects, options) => {
+    fabric.loadSVGFromURL('/textures/Jersey_COLOR2.svg', (objects, options) => {
       const svgData = fabric.util.groupSVGElements(objects, {
-        width: 1024,
-        height: 1024,
+        width: 512,
+        height: 512,
         selectable: false,
         crossOrigin: 'anonymous',
       })
@@ -87,6 +87,8 @@ function Shirt(props: JSX.IntrinsicElements['group']) {
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
+      width: 512,
+      height: 512,
       selection: false,
     })
 
