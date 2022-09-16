@@ -537,33 +537,43 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
-          <ThreeCanvas camera={{ position: [0, 0, 0], fov: 50 }} id="rendered">
-            {/* <ambientLight intensity={0.7} /> */}
-            {/* <spotLight
+          <ThreeCanvas
+            camera={{ position: [0, 0, 500], fov: 30 }}
+            id="rendered"
+          >
+            <spotLight
               intensity={0.5}
-              angle={0.5}
+              angle={0.574}
               penumbra={1}
-              position={[10, 50, 10]}
+              position={[41.132, 52.976, 0.628]}
               castShadow
-            /> */}
+            />
+            <spotLight
+              intensity={0.5}
+              angle={0.574}
+              penumbra={1}
+              position={[5.0, 63.448, 64.29]}
+              castShadow
+            />
+            <directionalLight
+              intensity={0.3}
+              position={[-39.303, 39.5, 56.439]}
+            />
+            <directionalLight
+              intensity={0.3}
+              position={[5.0, 52.174, -49.124]}
+            />
             <Suspense fallback={null}>
               <Shirt />
               <Environment preset="city" />
-              {/* <ContactShadows
-                position={[0, -0.8, 0]}
-                opacity={0.25}
-                scale={10}
-                blur={1.5}
-                far={0.8}
-              /> */}
             </Suspense>
             <OrbitControls
               minPolarAngle={Math.PI / 2.8}
               maxPolarAngle={Math.PI / 1.7}
-              minDistance={60}
-              minZoom={60}
-              maxDistance={90}
-              maxZoom={90}
+              minDistance={20}
+              minZoom={20}
+              maxDistance={60}
+              maxZoom={60}
               enableZoom={true}
               enablePan={false}
             />
