@@ -106,12 +106,30 @@ function Shirt(props: JSX.IntrinsicElements['group']) {
         geometry={nodes.M740158_mesh_zipper.geometry}
         material={materials.blinn9}
         scale={100}
-      />
+      >
+        <meshStandardMaterial
+          attach="material"
+          normalMap={normalMap}
+          normalMap-flipY={false}
+          map={texture}
+        >
+          <canvasTexture attach="map" image={canvasRef} />
+        </meshStandardMaterial>
+      </mesh>
       <mesh
         geometry={nodes.M740158_mesh_band.geometry}
         material={materials.blinn8}
         scale={100}
-      />
+      >
+        <meshStandardMaterial
+          attach="material"
+          normalMap={normalMap}
+          normalMap-flipY={false}
+          map={texture}
+        >
+          <canvasTexture attach="map" image={canvasRef} />
+        </meshStandardMaterial>
+      </mesh>
       <mesh
         geometry={nodes.M740158_mesh_out.geometry}
         material={materials.blinn10}
@@ -130,12 +148,30 @@ function Shirt(props: JSX.IntrinsicElements['group']) {
         geometry={nodes.M740158_mesh_in.geometry}
         material={materials.blinn2}
         scale={100}
-      />
+      >
+        <meshStandardMaterial
+          attach="material"
+          normalMap={normalMap}
+          normalMap-flipY={false}
+          map={texture}
+        >
+          <canvasTexture attach="map" image={canvasRef} />
+        </meshStandardMaterial>
+      </mesh>
       <mesh
         geometry={nodes.M740158_mesh_zipp.geometry}
         material={materials.blinn4}
         scale={100}
-      />
+      >
+        <meshStandardMaterial
+          attach="material"
+          normalMap={normalMap}
+          normalMap-flipY={false}
+          map={texture}
+        >
+          <canvasTexture attach="map" image={canvasRef} />
+        </meshStandardMaterial>
+      </mesh>
     </group>
   )
 }

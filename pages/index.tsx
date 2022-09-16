@@ -538,6 +538,7 @@ const Home: NextPage = () => {
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
           <ThreeCanvas
+            shadows
             camera={{ position: [0, 0, 500], fov: 30 }}
             id="rendered"
           >
@@ -568,12 +569,12 @@ const Home: NextPage = () => {
               <Environment preset="city" />
             </Suspense>
             <OrbitControls
-              minPolarAngle={Math.PI / 2.8}
-              maxPolarAngle={Math.PI / 1.7}
+              minPolarAngle={Math.PI / 4}
+              maxPolarAngle={Math.PI / 1.4}
               minDistance={20}
               minZoom={20}
-              maxDistance={60}
-              maxZoom={60}
+              maxDistance={90}
+              maxZoom={90}
               enableZoom={true}
               enablePan={false}
             />
