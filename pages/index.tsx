@@ -9,9 +9,10 @@ import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Canvas } from '@react-three/fiber'
 import { Shirt } from '@components/Objects'
 import { Environment, ContactShadows, OrbitControls } from '@react-three/drei'
+import { Canvas as ThreeCanvas } from '@react-three/fiber'
+import { Canvas } from '@components/Fabric'
 
 const jerseyStyles = [
   {
@@ -154,7 +155,7 @@ const Home: NextPage = () => {
         <div className="lg:w-1/2">
           {/* Mobile */}
           <div className="my-5 lg:hidden">
-            <Canvas
+            {/* <Canvas
               shadows
               camera={{ position: [0, 60, 4], fov: 50 }}
               style={{ height: '300px' }}
@@ -169,7 +170,6 @@ const Home: NextPage = () => {
               />
               <Suspense fallback={null}>
                 <Shirt />
-                {/* <Shoe /> */}
                 <Environment preset="city" />
                 <ContactShadows
                   position={[0, -0.8, 0]}
@@ -185,7 +185,7 @@ const Home: NextPage = () => {
                 enableZoom={false}
                 enablePan={false}
               />
-            </Canvas>
+            </Canvas> */}
           </div>
 
           <div className="mb-3 mt-5">
@@ -537,7 +537,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
-          <Canvas camera={{ position: [0, 60, 4], fov: 50 }}>
+          <ThreeCanvas camera={{ position: [0, 0, 0], fov: 50 }} id="rendered">
             {/* <ambientLight intensity={0.7} /> */}
             {/* <spotLight
               intensity={0.5}
@@ -548,7 +548,6 @@ const Home: NextPage = () => {
             /> */}
             <Suspense fallback={null}>
               <Shirt />
-              {/* <Shoe /> */}
               <Environment preset="city" />
               {/* <ContactShadows
                 position={[0, -0.8, 0]}
@@ -561,12 +560,17 @@ const Home: NextPage = () => {
             <OrbitControls
               minPolarAngle={Math.PI / 2.8}
               maxPolarAngle={Math.PI / 1.7}
+              minDistance={60}
+              minZoom={60}
+              maxDistance={90}
+              maxZoom={90}
               enableZoom={true}
               enablePan={false}
             />
-          </Canvas>
+          </ThreeCanvas>
         </div>
       </div>
+      <canvas id="canvas" style={{ display: 'none' }} />
     </>
   )
 }
