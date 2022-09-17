@@ -188,7 +188,7 @@ const Home: NextPage = () => {
         </Text>
       </div>
 
-      <div className="flex px-4 lg:px-16 flex-col lg:flex-row">
+      <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1028px] lg:mx-auto">
         <div className="lg:w-1/2">
           {/* Mobile */}
           <div className="my-5 lg:hidden">
