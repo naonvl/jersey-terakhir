@@ -158,8 +158,7 @@ const Home: NextPage = () => {
               shadows
               camera={{ position: [0, 0, 500], fov: 30 }}
               style={{
-                width: '596px',
-                height: '599px',
+                height: '300px',
               }}
               id="rendered"
             >
