@@ -9,11 +9,9 @@ import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Shirt } from '@components/Objects'
-import { Environment, OrbitControls } from '@react-three/drei'
 import { Canvas as ThreeCanvas } from '@react-three/fiber'
-import { fabric } from 'fabric'
-import THREE from 'three'
+import { SpotLight, OrbitControls, Environment } from '@react-three/drei'
+import { Shirt } from '@components/Objects'
 
 const jerseyStyles = [
   {
@@ -43,7 +41,6 @@ const options = [
 
 const Home: NextPage = () => {
   const dropdownRef = useRef(null)
-  const canvasRef = useRef<fabric.Canvas | null>(null)
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
@@ -57,41 +54,6 @@ const Home: NextPage = () => {
     fontSize: 16,
     fontFamily: 'Roboto',
   })
-
-  const initCanvas = () =>
-    new fabric.Canvas('canvas', {
-      preserveObjectStacking: true,
-      width: 512,
-      height: 512,
-      selection: false,
-    })
-
-  useEffect(() => {
-    canvasRef.current = initCanvas()
-
-    fabric.loadSVGFromURL('/textures/Jersey_COLOR2.svg', (objects, options) => {
-      const svgData = fabric.util.groupSVGElements(objects, {
-        width: 512,
-        height: 512,
-        selectable: false,
-        crossOrigin: 'anonymous',
-      })
-      svgData.top = 0
-      svgData.left = 0
-      if (canvasRef.current) {
-        canvasRef.current.add(svgData)
-        // canvasRef.current?.calcOffset()
-        canvasRef.current.sendToBack(svgData)
-        // canvasRef.current?.renderAll()
-      }
-    })
-
-    // cleanup
-    return () => {
-      canvasRef.current?.dispose()
-      canvasRef.current = null
-    }
-  }, [])
 
   useEffect(() => {
     switch (step) {
@@ -188,41 +150,56 @@ const Home: NextPage = () => {
         </Text>
       </div>
 
-      <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1028px] lg:mx-auto">
+      <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1400px] mx-auto">
         <div className="lg:w-1/2">
           {/* Mobile */}
           <div className="my-5 lg:hidden">
-            {/* <Canvas
+            <ThreeCanvas
               shadows
-              camera={{ position: [0, 60, 4], fov: 50 }}
-              style={{ height: '300px' }}
+              camera={{ position: [0, 0, 500], fov: 30 }}
+              style={{
+                width: '596px',
+                height: '599px',
+              }}
+              id="rendered"
             >
-              <ambientLight intensity={0.7} />
-              <spotLight
+              <SpotLight
                 intensity={0.5}
-                angle={0.5}
+                angle={0.574}
                 penumbra={1}
-                position={[10, 50, 10]}
+                position={[41.132, 52.976, 0.628]}
                 castShadow
+              />
+              <SpotLight
+                intensity={0.5}
+                angle={0.574}
+                penumbra={1}
+                position={[5.0, 63.448, 64.29]}
+                castShadow
+              />
+              <directionalLight
+                intensity={0.3}
+                position={[-39.303, 39.5, 56.439]}
+              />
+              <directionalLight
+                intensity={0.3}
+                position={[5.0, 52.174, -49.124]}
               />
               <Suspense fallback={null}>
                 <Shirt />
                 <Environment preset="city" />
-                <ContactShadows
-                  position={[0, -0.8, 0]}
-                  opacity={0.25}
-                  scale={10}
-                  blur={1.5}
-                  far={0.8}
-                />
               </Suspense>
               <OrbitControls
-                minPolarAngle={Math.PI / 2.8}
-                maxPolarAngle={Math.PI / 1.7}
-                enableZoom={false}
+                minPolarAngle={Math.PI / 4}
+                maxPolarAngle={Math.PI / 1.4}
+                minDistance={20}
+                minZoom={20}
+                maxDistance={90}
+                maxZoom={60}
+                enableZoom={true}
                 enablePan={false}
               />
-            </Canvas> */}
+            </ThreeCanvas>
           </div>
 
           <div className="mb-3 mt-5">
@@ -516,7 +493,7 @@ const Home: NextPage = () => {
               <button
                 type="button"
                 className={cn(
-                  'text-center py-3 px-6 lg:py-2 lg:px-8 uppercase text-sm',
+                  'text-center py-3 px-6 lg:py-2 lg:px-8 uppercase text-sm hover:border hover:border-black hover:bg-white hover:text-black',
                   {
                     ['border border-black bg-white text-black']:
                       dropdownOpen.stepOne,
@@ -533,7 +510,7 @@ const Home: NextPage = () => {
               <button
                 type="button"
                 className={cn(
-                  'text-center py-3 px-6 lg:py-2 lg:px-8 uppercase text-sm',
+                  'text-center py-3 px-6 lg:py-2 lg:px-8 uppercase text-sm hover:border hover:border-black hover:bg-white hover:text-black',
                   {
                     ['border border-black bg-white text-black']:
                       dropdownOpen.stepThree,
@@ -566,7 +543,7 @@ const Home: NextPage = () => {
             <button
               type="button"
               className={cn(
-                'w-full h-[3.5rem] px-4 text-center py-3 uppercase bg-pink-600 border border-pink-600 text-white my-2'
+                'w-full h-[3.5rem] px-4 text-center py-3 uppercase bg-pink-600 border border-pink-600 text-white my-2 hover:border hover:border-black hover:bg-white hover:text-black'
               )}
             >
               add to cart
@@ -583,14 +560,14 @@ const Home: NextPage = () => {
             }}
             id="rendered"
           >
-            <spotLight
+            <SpotLight
               intensity={0.5}
               angle={0.574}
               penumbra={1}
               position={[41.132, 52.976, 0.628]}
               castShadow
             />
-            <spotLight
+            <SpotLight
               intensity={0.5}
               angle={0.574}
               penumbra={1}
@@ -606,7 +583,7 @@ const Home: NextPage = () => {
               position={[5.0, 52.174, -49.124]}
             />
             <Suspense fallback={null}>
-              <Shirt canvasRef={canvasRef} />
+              <Shirt />
               <Environment preset="city" />
             </Suspense>
             <OrbitControls

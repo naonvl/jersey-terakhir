@@ -10,6 +10,8 @@ import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import { GLTF } from 'three-stdlib'
 import { fabric } from 'fabric'
 import { useTimer } from 'use-timer'
+import initCanvas from '@utils/initCanvas'
+import loadSvg from '@utils/loadSvg'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -29,14 +31,16 @@ type GLTFResult = GLTF & {
 }
 
 interface ShirtProps {
-  canvasRef: MutableRefObject<fabric.Canvas | null>
   props?: JSX.IntrinsicElements['group']
 }
 
-const Shirt: React.FC<ShirtProps> = ({ canvasRef, props }) => {
+const width = 512
+const height = 512
+
+const Shirt: React.FC<ShirtProps> = ({ props }) => {
   const { gl } = useThree()
-  const [rotate, setRotate] = useState<boolean>(true)
   const groupRef = useRef<THREE.Group>(null)
+  const canvasRef = useRef<fabric.Canvas | null>(null)
   const texture = useRef<THREE.CanvasTexture | null>(null)
 
   // Textures
@@ -48,9 +52,27 @@ const Shirt: React.FC<ShirtProps> = ({ canvasRef, props }) => {
   const { nodes, materials } = useGLTF('/cycling-jersey.drc.glb') as GLTFResult
   const { start, pause, reset, status } = useTimer()
 
-  useState(() => {
+  useEffect(() => {
+    canvasRef.current = initCanvas({
+      width,
+      height,
+    })
+
+    loadSvg({
+      path: 2,
+      canvas: canvasRef,
+      width,
+      height,
+    })
+
     start()
-  })
+
+    // cleanup
+    return () => {
+      canvasRef.current?.dispose()
+      canvasRef.current = null
+    }
+  }, [start])
 
   useFrame((state) => {
     if (canvasRef.current) {
