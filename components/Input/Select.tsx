@@ -71,10 +71,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           disabled={disabled}
           {...rest}
         >
-          <option hidden disabled selected></option>
-          <option selected defaultValue={defaultValue}>
-            {defaultOption}
-          </option>
+          <option hidden disabled></option>
+          <option defaultValue={defaultValue}>{defaultOption}</option>
           {options.map((_, index) => (
             <option key={index} value={_.value}>
               {_.text}
