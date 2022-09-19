@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import { Fragment, MutableRefObject, MouseEvent } from 'react'
+import { Fragment, MutableRefObject, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon'
 
@@ -10,7 +10,6 @@ interface DropdownsProps {
   buttonName: string
   onClick: (e: any) => void
   open: boolean
-  ref: MutableRefObject<any>
   label: string
 }
 
@@ -21,9 +20,9 @@ const Dropdowns: React.FC<DropdownsProps> = ({
   buttonName,
   onClick,
   open,
-  ref,
   label,
 }) => {
+  const buttonRef = useRef(null)
   const rootClasses = cn('relative inline-block text-left', rootClass)
   const menuClasses = cn(
     'right-0 z-10 origin-top-right rounded-md bg-white focus:outline-none',
@@ -35,7 +34,7 @@ const Dropdowns: React.FC<DropdownsProps> = ({
       <div>
         <Menu.Button
           onClick={onClick}
-          ref={ref}
+          ref={buttonRef}
           aria-label={label}
           className="inline-flex w-full justify-between uppercase border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-100"
         >

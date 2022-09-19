@@ -16,7 +16,7 @@ const loadSvg = ({ path, canvas, width = 512, height = 512 }: LoadSVGProps) => {
         width: width,
         height: height,
         selectable: false,
-        crossOrigin: 'anonymous',
+        crossOrigin: 'Anonymous',
       })
 
       svgData.top = 0

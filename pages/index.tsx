@@ -40,7 +40,6 @@ const options = [
 ]
 
 const Home: NextPage = () => {
-  const dropdownRef = useRef(null)
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
@@ -265,7 +264,6 @@ const Home: NextPage = () => {
 
           <div className="my-5">
             <Dropdowns
-              ref={dropdownRef}
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepOne}
               buttonName="Choose your style"
@@ -299,7 +297,6 @@ const Home: NextPage = () => {
             </Dropdowns>
 
             <Dropdowns
-              ref={dropdownRef}
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepTwo}
               buttonName="Choose your colours"
@@ -416,7 +413,6 @@ const Home: NextPage = () => {
             </Dropdowns>
 
             <Dropdowns
-              ref={dropdownRef}
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepThree}
               buttonName="Add text"
@@ -533,7 +529,6 @@ const Home: NextPage = () => {
               onChange={handleChange}
               value={order}
               min={1}
-              defaultValue={1}
               decrementAction={decrementAction}
               incrementAction={incrementAction}
               count={order}

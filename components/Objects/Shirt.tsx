@@ -41,7 +41,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
   const { gl } = useThree()
   const groupRef = useRef<THREE.Group>(null)
   const canvasRef = useRef<fabric.Canvas | null>(null)
-  const texture = useRef<THREE.CanvasTexture | null>(null)
+  const texture = useRef<THREE.Texture | null>(null)
 
   // Textures
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
@@ -76,7 +76,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
 
   useFrame((state) => {
     if (canvasRef.current) {
-      texture.current = new THREE.CanvasTexture(canvasRef.current.getElement())
+      texture.current = new THREE.Texture(canvasRef.current.getElement())
       texture.current.anisotropy = gl.capabilities.getMaxAnisotropy()
       texture.current.needsUpdate = true
       texture.current.flipY = false
@@ -120,7 +120,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
           normalMap-flipY={false}
           map={texture.current}
         >
-          <canvasTexture attach="map" image={canvasRef} />
+          <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
       <mesh
@@ -134,7 +134,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
           normalMap-flipY={false}
           map={texture.current}
         >
-          <canvasTexture attach="map" image={canvasRef} />
+          <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
       <mesh
@@ -148,7 +148,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
           normalMap-flipY={false}
           map={texture.current}
         >
-          <canvasTexture attach="map" image={canvasRef} ref={texture} />
+          <texture attach="map" image={canvasRef} ref={texture} />
         </meshStandardMaterial>
       </mesh>
       <mesh
@@ -162,7 +162,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
           normalMap-flipY={false}
           map={texture.current}
         >
-          <canvasTexture attach="map" image={canvasRef} />
+          <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
       <mesh
@@ -176,7 +176,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
           normalMap-flipY={false}
           map={texture.current}
         >
-          <canvasTexture attach="map" image={canvasRef} />
+          <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
     </group>
