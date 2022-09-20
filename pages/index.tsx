@@ -9,7 +9,7 @@ import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Canvas as ThreeCanvas } from '@react-three/fiber'
+import { Canvas as ThreeCanvas, useFrame } from '@react-three/fiber'
 import { SpotLight, OrbitControls, Environment } from '@react-three/drei'
 import { Shirt } from '@components/Objects'
 
@@ -39,10 +39,36 @@ const options = [
   },
 ]
 
+const Dolly = ({
+  isObjectFront,
+  cameraChanged,
+  setCameraChanged,
+}: {
+  isObjectFront: boolean
+  cameraChanged: boolean
+  setCameraChanged: any
+}) => {
+  useFrame((state) => {
+    if (!isObjectFront && cameraChanged) {
+      state.camera.position.z = -500
+      setCameraChanged(false)
+    }
+
+    if (isObjectFront && cameraChanged) {
+      state.camera.position.z = 500
+      setCameraChanged(false)
+    }
+  })
+
+  return null
+}
+
 const Home: NextPage = () => {
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
+  const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
+  const [cameraChanged, setCameraChanged] = useState<boolean>(false)
   const [dropdownOpen, setDropdownOpen] = useState({
     stepOne: true,
     stepTwo: false,
@@ -83,6 +109,11 @@ const Home: NextPage = () => {
         })
     }
   }, [step])
+
+  const handleViewCamera = () => {
+    setIsObjectFront(!isObjectFront)
+    setCameraChanged(true)
+  }
 
   const decrementAction = () => {
     if (order == 1) {
@@ -550,6 +581,15 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
+          <div className="flex justify-between">
+            <button
+              type="button"
+              className="cursor-pointer uppercase font-bold text-sm text-gray-800"
+              onClick={handleViewCamera}
+            >
+              view {isObjectFront ? 'back' : 'front'}
+            </button>
+          </div>
           <ThreeCanvas
             shadows
             camera={{ position: [0, 0, 500], fov: 30 }}
@@ -594,6 +634,11 @@ const Home: NextPage = () => {
               maxZoom={60}
               enableZoom={true}
               enablePan={false}
+            />
+            <Dolly
+              isObjectFront={isObjectFront}
+              cameraChanged={cameraChanged}
+              setCameraChanged={setCameraChanged}
             />
           </ThreeCanvas>
         </div>
