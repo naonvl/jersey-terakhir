@@ -93,7 +93,7 @@ const Home: NextPage = () => {
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
-  const [texturePath, setTexturePath] = useState(2)
+  const [texturePath, setTexturePath] = useState(1)
   const [openControls, setOpenControls] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
