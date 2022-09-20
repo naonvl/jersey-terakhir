@@ -274,7 +274,7 @@ const Home: NextPage = () => {
               <div className="flex overflow-hidden">
                 {jerseyStyles.map(({ text, image }, index) => (
                   <div
-                    className="cursor-pointer w-full justify-center items-center"
+                    className="w-full justify-center items-center"
                     key={index}
                   >
                     <LayoutFill
@@ -288,9 +288,14 @@ const Home: NextPage = () => {
                         maxWidth: '177px',
                       }}
                     />
-                    <Text className="mt-2 uppercase font-bold text-center text-sm">
+                    <button
+                      type="button"
+                      className={cn(
+                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600 hover:bg-white hover:text-black'
+                      )}
+                    >
                       {text}
-                    </Text>
+                    </button>
                   </div>
                 ))}
               </div>
