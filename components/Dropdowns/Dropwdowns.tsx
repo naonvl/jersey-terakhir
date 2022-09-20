@@ -7,7 +7,7 @@ interface DropdownsProps {
   rootClass?: string
   menuClass?: string
   children?: React.ReactNode | string
-  buttonName: string
+  buttonName: React.ReactNode | string
   onClick: (e: any) => void
   open: boolean
   label: string

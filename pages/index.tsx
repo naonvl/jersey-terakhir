@@ -1,34 +1,42 @@
 import cn from 'clsx'
-import { useState, useRef, MouseEvent, useEffect, Suspense } from 'react'
+import {
+  useState,
+  useRef,
+  MouseEvent,
+  useEffect,
+  Suspense,
+  useLayoutEffect,
+} from 'react'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { Text } from '@components/Text'
 import { Navbar } from '@components/Nav'
-import { Dropdowns } from '@components/Dropdowns'
+import { Dropdowns, DropdownControls } from '@components/Dropdowns'
 import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Canvas as ThreeCanvas, useFrame } from '@react-three/fiber'
-import { SpotLight, OrbitControls, Environment } from '@react-three/drei'
+import { Canvas as ThreeCanvas, useFrame, useThree } from '@react-three/fiber'
+import { SpotLight, OrbitControls, Environment, Stats } from '@react-three/drei'
+import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import { Shirt } from '@components/Objects'
 
 const jerseyStyles = [
   {
-    image: '/Simple.png',
-    text: 'Simple',
-  },
-  {
-    image: '/Stealth.png',
     text: 'Champion',
+    image: '/thumbnails/champion_front_2022.jpg',
   },
   {
-    image: '/Ice.png',
-    text: 'CLIMBER',
+    text: 'Simple',
+    image: '/thumbnails/simple_front_2022.jpg',
   },
   {
-    image: '/Bubbles.png',
+    text: 'Climber',
+    image: '/thumbnails/climber_front_2022.jpg',
+  },
+  {
     text: 'Bubbles',
+    image: '/thumbnails/bubbles_front_2022.jpg',
   },
 ]
 
@@ -38,6 +46,24 @@ const options = [
     text: 'Roboto',
   },
 ]
+
+const AdaptivePixelRatio = () => {
+  const current = useThree((state) => state.performance.current)
+  const three = useThree()
+
+  useEffect(() => {
+    three.gl.setPixelRatio(current * 2)
+    document.body.style.imageRendering = current === 1 ? 'auto' : 'pixelated'
+  }, [current, three.gl])
+
+  return null
+}
+
+const Precompile = () => {
+  const { gl, scene, camera } = useThree()
+  useLayoutEffect(() => void gl.compile(scene, camera), [camera, gl, scene])
+  return null
+}
 
 const Dolly = ({
   isObjectFront,
@@ -67,6 +93,8 @@ const Home: NextPage = () => {
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
+  const [texturePath, setTexturePath] = useState(2)
+  const [openControls, setOpenControls] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -109,6 +137,10 @@ const Home: NextPage = () => {
         })
     }
   }, [step])
+
+  const handleChangeTexture = (index: number) => {
+    setTexturePath(index + 1)
+  }
 
   const handleViewCamera = () => {
     setIsObjectFront(!isObjectFront)
@@ -215,7 +247,7 @@ const Home: NextPage = () => {
                 position={[5.0, 52.174, -49.124]}
               />
               <Suspense fallback={null}>
-                <Shirt />
+                <Shirt texturePath={texturePath} />
                 <Environment preset="city" />
               </Suspense>
               <OrbitControls
@@ -324,6 +356,7 @@ const Home: NextPage = () => {
                       className={cn(
                         'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600 hover:bg-white hover:text-black'
                       )}
+                      onClick={() => handleChangeTexture(index)}
                     >
                       {text}
                     </button>
@@ -581,13 +614,24 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
-          <div className="flex justify-between">
+          <div className="relative">
+            <DropdownControls />
+          </div>
+          <div className="relative">
             <button
               type="button"
-              className="cursor-pointer uppercase font-bold text-sm text-gray-800"
+              className="cursor-pointer uppercase font-bold bg-white text-sm text-gray-800 absolute top-[1rem] left-[4rem] z-30"
               onClick={handleViewCamera}
             >
               view {isObjectFront ? 'back' : 'front'}
+            </button>
+
+            <button
+              type="button"
+              className="cursor-pointer uppercase font-bold bg-white text-sm text-gray-800 inline-flex gap-1 absolute top-[1rem] right-[4rem] z-30"
+            >
+              <ArrowDownTrayIcon className="h-5 w-5 text-gray-800" />
+              <span>save</span>
             </button>
           </div>
           <ThreeCanvas
@@ -599,6 +643,8 @@ const Home: NextPage = () => {
             }}
             id="rendered"
           >
+            <Precompile />
+            <AdaptivePixelRatio />
             <SpotLight
               intensity={0.5}
               angle={0.574}
@@ -622,16 +668,16 @@ const Home: NextPage = () => {
               position={[5.0, 52.174, -49.124]}
             />
             <Suspense fallback={null}>
-              <Shirt />
+              <Shirt texturePath={texturePath} />
               <Environment preset="city" />
             </Suspense>
             <OrbitControls
               minPolarAngle={Math.PI / 4}
               maxPolarAngle={Math.PI / 1.4}
               minDistance={20}
-              minZoom={20}
+              // minZoom={20}
               maxDistance={90}
-              maxZoom={60}
+              // maxZoom={90}
               enableZoom={true}
               enablePan={false}
             />
@@ -640,6 +686,7 @@ const Home: NextPage = () => {
               cameraChanged={cameraChanged}
               setCameraChanged={setCameraChanged}
             />
+            <Stats showPanel={0} />
           </ThreeCanvas>
         </div>
       </div>

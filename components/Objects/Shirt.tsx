@@ -33,13 +33,15 @@ type GLTFResult = GLTF & {
 
 interface ShirtProps {
   props?: JSX.IntrinsicElements['group']
+  texturePath: number
 }
 
-const width = 512
-const height = 512
+const width = 1024
+const height = 1024
 
-const Shirt: React.FC<ShirtProps> = ({ props }) => {
+const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
   const { gl } = useThree()
+  const regress = useThree((state) => state.performance.regress)
   const cam = useRef<THREE.PerspectiveCamera>(null)
   const groupRef = useRef<THREE.Group>(null)
   const canvasRef = useRef<fabric.Canvas | null>(null)
@@ -62,8 +64,10 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
       height,
     })
 
+    groupRef.current?.addEventListener('change', regress)
+
     loadSvg({
-      path: 2,
+      path: texturePath,
       canvas: canvasRef,
       width,
       height,
@@ -79,7 +83,7 @@ const Shirt: React.FC<ShirtProps> = ({ props }) => {
       canvasRef.current?.dispose()
       canvasRef.current = null
     }
-  }, [start])
+  }, [regress, start, texturePath])
 
   useFrame((state) => {
     if (canvasRef.current) {
