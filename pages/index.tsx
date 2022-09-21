@@ -26,6 +26,7 @@ import {
 } from '@react-three/drei'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import { Shirt } from '@components/Objects'
+import Loader from '@components/Scene/Loader'
 
 const jerseyStyles = [
   {
@@ -82,11 +83,12 @@ const Home: NextPage = () => {
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
   const [texturePath, setTexturePath] = useState(1)
+  const [isLoading, setLoading] = useState<boolean>(true)
   const [openControls, setOpenControls] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
   const [dropdownOpen, setDropdownOpen] = useState({
-    stepOne: true,
+    stepOne: false,
     stepTwo: false,
     stepThree: false,
   })
@@ -325,7 +327,8 @@ const Home: NextPage = () => {
               <div className="flex overflow-hidden">
                 {jerseyStyles.map(({ text, image }, index) => (
                   <div
-                    className="w-full justify-center items-center"
+                    className=" cursor-pointer w-full justify-center items-center"
+                    onClick={() => handleChangeTexture(index)}
                     key={index}
                   >
                     <LayoutFill
@@ -342,9 +345,11 @@ const Home: NextPage = () => {
                     <button
                       type="button"
                       className={cn(
-                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600 hover:bg-white hover:text-black'
+                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600',
+                        {
+                          ['border border-pink-600']: texturePath === index + 1,
+                        }
                       )}
-                      onClick={() => handleChangeTexture(index)}
                     >
                       {text}
                     </button>
@@ -622,63 +627,63 @@ const Home: NextPage = () => {
               <span>save</span>
             </button>
           </div>
-          <ThreeCanvas
-            frameloop="demand"
-            performance={{ min: 0.1, max: 0.3 }}
-            camera={{ position: [0, 0, 500], fov: 30 }}
-            style={{
-              width: '596px',
-              height: '599px',
-            }}
-            id="rendered"
-          >
-            {/* <Precompile />
-            <AdaptivePixelRatio />
-            <Controls /> */}
-            <SpotLight
-              intensity={0.5}
-              angle={0.574}
-              penumbra={1}
-              position={[41.132, 52.976, 0.628]}
-              castShadow
-            />
-            {/* <SpotLight
-              intensity={0.5}
-              angle={0.574}
-              penumbra={1}
-              position={[5.0, 63.448, 64.29]}
-              castShadow
-            /> */}
-            <directionalLight
-              intensity={0.3}
-              position={[-39.303, 39.5, 56.439]}
-            />
-            {/* <directionalLight
-              intensity={0.3}
-              position={[5.0, 52.174, -49.124]}
-            /> */}
-            <Suspense fallback={null}>
-              <Shirt texturePath={texturePath} />
-              <Environment preset="city" />
-            </Suspense>
-            <OrbitControls
-              minPolarAngle={Math.PI / 4}
-              maxPolarAngle={Math.PI / 1.4}
-              minDistance={20}
-              minZoom={20}
-              maxDistance={90}
-              maxZoom={90}
-              enableZoom={true}
-              enablePan={false}
-            />
-            <Dolly
-              isObjectFront={isObjectFront}
-              cameraChanged={cameraChanged}
-              setCameraChanged={setCameraChanged}
-            />
-            <AdaptiveDpr />
-            <Stats showPanel={0} />
-          </ThreeCanvas>
+          <Suspense fallback={<span>loading...</span>}>
+            <ThreeCanvas
+              frameloop="demand"
+              performance={{ min: 0.1, max: 0.3 }}
+              camera={{ position: [0, 0, 500], fov: 30 }}
+              style={{
+                width: '596px',
+                height: '599px',
+              }}
+              id="rendered"
+            >
+              <ambientLight intensity={0.7} />
+              <spotLight
+                intensity={1}
+                angle={0.3}
+                penumbra={1}
+                position={[10, 50, 50]}
+                castShadow
+              />
+              <spotLight
+                intensity={1}
+                angle={0.3}
+                penumbra={1}
+                position={[10, 50, -50]}
+                castShadow
+              />
+              <Suspense
+                fallback={
+                  <Loader
+                    dropdownOpen={dropdownOpen}
+                    setDropdownOpen={setDropdownOpen}
+                    isLoading={isLoading}
+                  />
+                }
+              >
+                <Shirt texturePath={texturePath} setLoading={setLoading} />
+                <Environment preset="city" />
+              </Suspense>
+              <OrbitControls
+                minPolarAngle={Math.PI / 4}
+                maxPolarAngle={Math.PI / 1.4}
+                minDistance={20}
+                minZoom={20}
+                maxDistance={90}
+                maxZoom={90}
+                enableZoom={true}
+                enablePan={false}
+              />
+              <Dolly
+                isObjectFront={isObjectFront}
+                cameraChanged={cameraChanged}
+                setCameraChanged={setCameraChanged}
+              />
+              <AdaptiveDpr />
+              <Stats showPanel={0} />
+            </ThreeCanvas>
+          </Suspense>
         </div>
       </div>
       <canvas id="canvas" style={{ display: 'none' }} />

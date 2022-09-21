@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { fabric } from 'fabric'
 
 interface LoadSVGProps {
@@ -6,9 +6,16 @@ interface LoadSVGProps {
   canvas: MutableRefObject<fabric.Canvas | null>
   width?: number
   height?: number
+  setLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const loadSvg = ({ path, canvas, width = 512, height = 512 }: LoadSVGProps) => {
+const loadSvg = ({
+  path,
+  canvas,
+  width = 512,
+  height = 512,
+  setLoading,
+}: LoadSVGProps) => {
   fabric.loadSVGFromURL(
     `/textures/Jersey_COLOR${path}.svg`,
     (objects, options) => {
@@ -26,6 +33,7 @@ const loadSvg = ({ path, canvas, width = 512, height = 512 }: LoadSVGProps) => {
         canvas.current.add(svgData)
         canvas.current.remove(canvas.current._objects[0])
         canvas.current.sendToBack(svgData)
+        setLoading(false)
       }
     }
   )
