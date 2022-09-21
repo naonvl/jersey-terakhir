@@ -10,6 +10,7 @@ import React, {
   useEffect,
   Dispatch,
   SetStateAction,
+  MutableRefObject,
 } from 'react'
 import { PerspectiveCamera, useGLTF } from '@react-three/drei'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
@@ -33,44 +34,44 @@ type GLTFResult = GLTF & {
 
 interface ShirtProps {
   props?: JSX.IntrinsicElements['group']
-  texturePath: number
+  canvasRef: MutableRefObject<fabric.Canvas | null>
   setLoading: Dispatch<SetStateAction<boolean>>
 }
 
 const width = 1024
 const height = 1024
 
-const Shirt: React.FC<ShirtProps> = ({ props, texturePath, setLoading }) => {
+const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
   const { gl } = useThree()
   // const cam = useRef<THREE.PerspectiveCamera>(null)
   const groupRef = useRef<THREE.Group>(null)
-  const canvasRef = useRef<fabric.Canvas | null>(null)
   const texture = useRef<THREE.Texture | null>(null)
 
   // Textures
-  const [normalMap] = useLoader(DDSLoader, ['/textures/Jersey_NORMAL.dds'])
+  const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
   const [aoMapout] = useLoader(TextureLoader, ['/textures/ao_out.png'])
   const [aoMapzipp] = useLoader(TextureLoader, ['/textures/ao_zip.png'])
 
   const [hovered, setHovered] = useState(false)
   const [clicked, setClicked] = useState(false)
 
-  const { nodes } = useGLTF('/S-cycling-jersey.drc.glb') as GLTFResult
+  const { nodes } = useGLTF('/cycling-jersey.drc.glb') as GLTFResult
   // const { start, pause, reset, status } = useTimer()
 
-  useEffect(() => {
-    canvasRef.current = initCanvas({
-      width,
-      height,
-    })
-
-    loadSvg({
-      path: texturePath,
-      canvas: canvasRef,
-      width,
-      height,
-      setLoading,
-    })
+  useFrame(() => {
+    if (canvasRef.current) {
+      texture.current = new THREE.CanvasTexture(canvasRef.current.getElement())
+      texture.current.anisotropy = gl.capabilities.getMaxAnisotropy()
+      texture.current.needsUpdate = true
+      texture.current.flipY = false
+    }
+    // loadSvg({
+    //   path: texturePath,
+    //   canvas: canvasRef,
+    //   width,
+    //   height,
+    //   setLoading,
+    // })
 
     // start()
     // if (cam.current) {
@@ -78,11 +79,7 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath, setLoading }) => {
     // }
 
     // cleanup
-    return () => {
-      canvasRef.current?.dispose()
-      canvasRef.current = null
-    }
-  }, [setLoading, texturePath])
+  })
 
   useFrame((state) => {
     if (canvasRef.current) {
@@ -165,8 +162,8 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath, setLoading }) => {
       <mesh
         geometry={nodes.M740158_mesh_zipp.geometry}
         material={nodes.M740158_mesh_zipp.material}
-        position={[0, -1.05, 4.19]}
-        rotation={[-0.24, 0, 0]}
+        // position={[0, -1.05, 4.19]}
+        // rotation={[-0.24, 0, 0]}
         scale={100}
       >
         <meshStandardMaterial

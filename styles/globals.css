@@ -4,6 +4,9 @@
 @import './custom.css';
 
 @layer base {
+  *,.font-sans{
+    font-family: Chivo,Arial,Tahoma,Verdana,sans-serif;
+  }
   input::-webkit-slider-runnable-track {
     -webkit-appearance: none;
     position: relative;

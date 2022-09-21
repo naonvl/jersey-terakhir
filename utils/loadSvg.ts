@@ -12,8 +12,8 @@ interface LoadSVGProps {
 const loadSvg = ({
   path,
   canvas,
-  width = 512,
-  height = 512,
+  width = 1024,
+  height = 1024,
   setLoading,
 }: LoadSVGProps) => {
   fabric.loadSVGFromURL(
@@ -25,14 +25,14 @@ const loadSvg = ({
         selectable: false,
         crossOrigin: 'Anonymous',
       })
-
       svgData.top = 0
       svgData.left = 0
-
+      console.log(svgData);
       if (canvas.current) {
         canvas.current.add(svgData)
         canvas.current.remove(canvas.current._objects[0])
         canvas.current.sendToBack(svgData)
+        canvas.current.renderAll();
         setLoading(false)
       }
     }
