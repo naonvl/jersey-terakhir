@@ -17,7 +17,13 @@ import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
 import { Canvas as ThreeCanvas, useFrame, useThree } from '@react-three/fiber'
-import { SpotLight, OrbitControls, Environment, Stats } from '@react-three/drei'
+import {
+  SpotLight,
+  OrbitControls,
+  Environment,
+  Stats,
+  AdaptiveDpr,
+} from '@react-three/drei'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import { Shirt } from '@components/Objects'
 
@@ -46,24 +52,6 @@ const options = [
     text: 'Roboto',
   },
 ]
-
-const AdaptivePixelRatio = () => {
-  const current = useThree((state) => state.performance.current)
-  const three = useThree()
-
-  useEffect(() => {
-    three.gl.setPixelRatio(current * 2)
-    document.body.style.imageRendering = current === 1 ? 'auto' : 'pixelated'
-  }, [current, three.gl])
-
-  return null
-}
-
-const Precompile = () => {
-  const { gl, scene, camera } = useThree()
-  useLayoutEffect(() => void gl.compile(scene, camera), [camera, gl, scene])
-  return null
-}
 
 const Dolly = ({
   isObjectFront,
@@ -215,7 +203,7 @@ const Home: NextPage = () => {
       <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1400px] mx-auto">
         <div className="lg:w-1/2">
           {/* Mobile */}
-          <div className="my-5 lg:hidden">
+          {/* <div className="my-5 lg:hidden">
             <ThreeCanvas
               shadows
               camera={{ position: [0, 0, 500], fov: 30 }}
@@ -261,7 +249,7 @@ const Home: NextPage = () => {
                 enablePan={false}
               />
             </ThreeCanvas>
-          </div>
+          </div> */}
 
           <div className="mb-3 mt-5">
             <div className="flex overflow-hidden md:justify-between">
@@ -635,7 +623,8 @@ const Home: NextPage = () => {
             </button>
           </div>
           <ThreeCanvas
-            shadows
+            frameloop="demand"
+            performance={{ min: 0.1, max: 0.3 }}
             camera={{ position: [0, 0, 500], fov: 30 }}
             style={{
               width: '596px',
@@ -643,8 +632,9 @@ const Home: NextPage = () => {
             }}
             id="rendered"
           >
-            <Precompile />
+            {/* <Precompile />
             <AdaptivePixelRatio />
+            <Controls /> */}
             <SpotLight
               intensity={0.5}
               angle={0.574}
@@ -652,21 +642,21 @@ const Home: NextPage = () => {
               position={[41.132, 52.976, 0.628]}
               castShadow
             />
-            <SpotLight
+            {/* <SpotLight
               intensity={0.5}
               angle={0.574}
               penumbra={1}
               position={[5.0, 63.448, 64.29]}
               castShadow
-            />
+            /> */}
             <directionalLight
               intensity={0.3}
               position={[-39.303, 39.5, 56.439]}
             />
-            <directionalLight
+            {/* <directionalLight
               intensity={0.3}
               position={[5.0, 52.174, -49.124]}
-            />
+            /> */}
             <Suspense fallback={null}>
               <Shirt texturePath={texturePath} />
               <Environment preset="city" />
@@ -675,9 +665,9 @@ const Home: NextPage = () => {
               minPolarAngle={Math.PI / 4}
               maxPolarAngle={Math.PI / 1.4}
               minDistance={20}
-              // minZoom={20}
+              minZoom={20}
               maxDistance={90}
-              // maxZoom={90}
+              maxZoom={90}
               enableZoom={true}
               enablePan={false}
             />
@@ -686,6 +676,7 @@ const Home: NextPage = () => {
               cameraChanged={cameraChanged}
               setCameraChanged={setCameraChanged}
             />
+            <AdaptiveDpr />
             <Stats showPanel={0} />
           </ThreeCanvas>
         </div>

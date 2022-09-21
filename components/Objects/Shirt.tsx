@@ -16,19 +16,13 @@ import loadSvg from '@utils/loadSvg'
 
 type GLTFResult = GLTF & {
   nodes: {
-    M740158_mesh_zipper: THREE.Mesh
     M740158_mesh_band: THREE.Mesh
-    M740158_mesh_out: THREE.Mesh
     M740158_mesh_in: THREE.Mesh
+    M740158_mesh_out: THREE.Mesh
     M740158_mesh_zipp: THREE.Mesh
+    M740158_mesh_zipper: THREE.Mesh
   }
-  materials: {
-    blinn9: THREE.MeshStandardMaterial
-    blinn8: THREE.MeshStandardMaterial
-    blinn10: THREE.MeshStandardMaterial
-    blinn2: THREE.MeshStandardMaterial
-    blinn4: THREE.MeshStandardMaterial
-  }
+  materials: {}
 }
 
 interface ShirtProps {
@@ -41,8 +35,7 @@ const height = 1024
 
 const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
   const { gl } = useThree()
-  const regress = useThree((state) => state.performance.regress)
-  const cam = useRef<THREE.PerspectiveCamera>(null)
+  // const cam = useRef<THREE.PerspectiveCamera>(null)
   const groupRef = useRef<THREE.Group>(null)
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const texture = useRef<THREE.Texture | null>(null)
@@ -56,15 +49,13 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
   const [clicked, setClicked] = useState(false)
 
   const { nodes, materials } = useGLTF('/cycling-jersey.drc.glb') as GLTFResult
-  const { start, pause, reset, status } = useTimer()
+  // const { start, pause, reset, status } = useTimer()
 
   useEffect(() => {
     canvasRef.current = initCanvas({
       width,
       height,
     })
-
-    groupRef.current?.addEventListener('change', regress)
 
     loadSvg({
       path: texturePath,
@@ -73,17 +64,17 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
       height,
     })
 
-    start()
-    if (cam.current) {
-      cam.current.lookAt(1, 0, 0)
-    }
+    // start()
+    // if (cam.current) {
+    //   cam.current.lookAt(1, 0, 0)
+    // }
 
     // cleanup
     return () => {
       canvasRef.current?.dispose()
       canvasRef.current = null
     }
-  }, [regress, start, texturePath])
+  }, [texturePath])
 
   useFrame((state) => {
     if (canvasRef.current) {
@@ -95,17 +86,17 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
       texture.current.needsUpdate = true
     }
 
-    if (status === 'RUNNING' && groupRef.current) {
-      groupRef.current.rotation.y += -0.05
-    }
+    // if (status === 'RUNNING' && groupRef.current) {
+    //   groupRef.current.rotation.y += -0.05
+    // }
 
-    if (
-      groupRef.current &&
-      groupRef.current.rotation.y === -6.299999999999986
-    ) {
-      pause()
-      reset()
-    }
+    // if (
+    //   groupRef.current &&
+    //   groupRef.current.rotation.y === -6.299999999999986
+    // ) {
+    //   pause()
+    //   reset()
+    // }
     state.gl.domElement.style.cursor = hovered ? 'grab' : 'auto'
     state.gl.domElement.style.cursor = clicked ? 'grabbing' : 'grab'
   })
@@ -120,10 +111,9 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
       onPointerUp={() => setClicked(false)}
       {...props}
     >
-      <PerspectiveCamera ref={cam} position={[0, 0, 0]} />
       <mesh
-        geometry={nodes.M740158_mesh_zipper.geometry}
-        material={materials.blinn9}
+        geometry={nodes.M740158_mesh_band.geometry}
+        material={nodes.M740158_mesh_band.material}
         scale={100}
       >
         <meshStandardMaterial
@@ -131,15 +121,13 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
           normalMap={normalMap}
           normalMap-flipY={false}
           map={texture.current}
-          aoMap={aoMapzipp}
-          aoMapIntensity={0.7}
         >
           <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
       <mesh
-        geometry={nodes.M740158_mesh_band.geometry}
-        material={materials.blinn8}
+        geometry={nodes.M740158_mesh_in.geometry}
+        material={nodes.M740158_mesh_in.material}
         scale={100}
       >
         <meshStandardMaterial
@@ -147,13 +135,12 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
           normalMap={normalMap}
           normalMap-flipY={false}
           map={texture.current}
-        >
-          <texture attach="map" image={canvasRef} />
-        </meshStandardMaterial>
+          color="#fff"
+        />
       </mesh>
       <mesh
         geometry={nodes.M740158_mesh_out.geometry}
-        material={materials.blinn10}
+        material={nodes.M740158_mesh_out.material}
         scale={100}
       >
         <meshStandardMaterial
@@ -168,21 +155,10 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
         </meshStandardMaterial>
       </mesh>
       <mesh
-        geometry={nodes.M740158_mesh_in.geometry}
-        material={materials.blinn2}
-        scale={100}
-      >
-        <meshStandardMaterial
-          attach="material"
-          normalMap={normalMap}
-          normalMap-flipY={false}
-          map={texture.current}
-          color="#fff"
-        />
-      </mesh>
-      <mesh
         geometry={nodes.M740158_mesh_zipp.geometry}
-        material={materials.blinn4}
+        material={nodes.M740158_mesh_zipp.material}
+        position={[0, -1.05, 4.19]}
+        rotation={[-0.24, 0, 0]}
         scale={100}
       >
         <meshStandardMaterial
@@ -196,6 +172,23 @@ const Shirt: React.FC<ShirtProps> = ({ props, texturePath }) => {
           <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
       </mesh>
+      <mesh
+        geometry={nodes.M740158_mesh_zipper.geometry}
+        material={nodes.M740158_mesh_zipper.material}
+        scale={100}
+      >
+        <meshStandardMaterial
+          attach="material"
+          normalMap={normalMap}
+          normalMap-flipY={false}
+          map={texture.current}
+          aoMap={aoMapzipp}
+          aoMapIntensity={0.7}
+        >
+          <texture attach="map" image={canvasRef} />
+        </meshStandardMaterial>
+      </mesh>
+      {/* <PerspectiveCamera ref={cam} position={[0, 0, 0]} /> */}
     </group>
   )
 }
