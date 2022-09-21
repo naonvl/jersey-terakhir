@@ -205,53 +205,65 @@ const Home: NextPage = () => {
       <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1400px] mx-auto">
         <div className="lg:w-1/2">
           {/* Mobile */}
-          {/* <div className="my-5 lg:hidden">
-            <ThreeCanvas
-              shadows
-              camera={{ position: [0, 0, 500], fov: 30 }}
-              style={{
-                height: '300px',
-              }}
-              id="rendered"
-            >
-              <SpotLight
-                intensity={0.5}
-                angle={0.574}
-                penumbra={1}
-                position={[41.132, 52.976, 0.628]}
-                castShadow
-              />
-              <SpotLight
-                intensity={0.5}
-                angle={0.574}
-                penumbra={1}
-                position={[5.0, 63.448, 64.29]}
-                castShadow
-              />
-              <directionalLight
-                intensity={0.3}
-                position={[-39.303, 39.5, 56.439]}
-              />
-              <directionalLight
-                intensity={0.3}
-                position={[5.0, 52.174, -49.124]}
-              />
-              <Suspense fallback={null}>
-                <Shirt texturePath={texturePath} />
-                <Environment preset="city" />
-              </Suspense>
-              <OrbitControls
-                minPolarAngle={Math.PI / 4}
-                maxPolarAngle={Math.PI / 1.4}
-                minDistance={20}
-                minZoom={20}
-                maxDistance={90}
-                maxZoom={60}
-                enableZoom={true}
-                enablePan={false}
-              />
-            </ThreeCanvas>
-          </div> */}
+          <div className="my-5 lg:hidden">
+            <Suspense fallback={<span>loading...</span>}>
+              <ThreeCanvas
+                frameloop="demand"
+                performance={{ min: 0.1, max: 0.3 }}
+                camera={{ position: [0, 0, 500], fov: 30 }}
+                style={{
+                  width: '596px',
+                  height: '599px',
+                }}
+                id="rendered"
+              >
+                <ambientLight intensity={0.7} />
+                <spotLight
+                  intensity={1}
+                  angle={0.3}
+                  penumbra={1}
+                  position={[10, 50, 50]}
+                  castShadow
+                />
+                <spotLight
+                  intensity={1}
+                  angle={0.3}
+                  penumbra={1}
+                  position={[10, 50, -50]}
+                  castShadow
+                />
+                <Suspense
+                  fallback={
+                    <Loader
+                      dropdownOpen={dropdownOpen}
+                      setDropdownOpen={setDropdownOpen}
+                      isLoading={isLoading}
+                    />
+                  }
+                >
+                  <Shirt texturePath={texturePath} setLoading={setLoading} />
+                  <Environment preset="city" />
+                </Suspense>
+                <OrbitControls
+                  minPolarAngle={Math.PI / 4}
+                  maxPolarAngle={Math.PI / 1.4}
+                  minDistance={20}
+                  minZoom={20}
+                  maxDistance={90}
+                  maxZoom={90}
+                  enableZoom={true}
+                  enablePan={false}
+                />
+                <Dolly
+                  isObjectFront={isObjectFront}
+                  cameraChanged={cameraChanged}
+                  setCameraChanged={setCameraChanged}
+                />
+                <AdaptiveDpr />
+                <Stats showPanel={0} />
+              </ThreeCanvas>
+            </Suspense>
+          </div>
 
           <div className="mb-3 mt-5">
             <div className="flex overflow-hidden md:justify-between">
