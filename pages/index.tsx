@@ -62,16 +62,23 @@ const Dolly = ({
   isObjectFront,
   cameraChanged,
   setCameraChanged,
-  zoom,
+  zoomIn,
+  zoomOut,
 }: {
   isObjectFront: boolean
   cameraChanged: boolean
   setCameraChanged: any
-  zoom: any
+  zoomIn: any
+  zoomOut: any
 }) => {
   useFrame((state) => {
-    if (zoom && cameraChanged) {
-      state.camera.zoom = zoom
+    if (zoomIn && cameraChanged) {
+      state.camera.zoom = zoomIn
+      state.camera.updateProjectionMatrix()
+      setCameraChanged(false)
+    }
+    if (zoomOut && cameraChanged) {
+      state.camera.zoom = zoomOut
       state.camera.updateProjectionMatrix()
       setCameraChanged(false)
     }
@@ -103,12 +110,13 @@ const Home: NextPage = () => {
   const [width, setWidth] = useState<number>(1400)
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const [texturePath, setTexturePath] = useState(1)
-  const [zoom, setZoom] = useState(1)
+  const [zoomIn, setZoomIn] = useState(1)
+  const [zoomOut, setZoomOut] = useState(1)
   const [isLoading, setLoading] = useState<boolean>(true)
+  const [svgLoading, setSvgLoading] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
   const loadSvg = (path: number) => {
-    setLoading(true)
     fabric.loadSVGFromURL(
       `/textures/Jersey_COLOR${path}.svg`,
       (objects, options) => {
@@ -127,7 +135,7 @@ const Home: NextPage = () => {
           canvasRef.current.add(svgData)
           canvasRef.current.sendToBack(svgData)
           canvasRef.current.renderAll()
-          setLoading(false)
+          setSvgLoading(false)
         }
       }
     )
@@ -151,6 +159,9 @@ const Home: NextPage = () => {
   })
   useEffect(() => {
     setWidth(window.innerWidth)
+    // setTimeout(() => {
+    //   setSvgLoading(false)
+    // }, 2500);
     console.log(width)
     loadSvg(1)
     canvasRef.current = initCanvas()
@@ -200,8 +211,12 @@ const Home: NextPage = () => {
     setIsObjectFront(!isObjectFront)
     setCameraChanged(true)
   }
-  const handleZoom = () => {
-    setZoom(zoom + 0.2)
+  const handleZoomIn = () => {
+    setZoomIn(zoomIn + 0.1)
+    setCameraChanged(true)
+  }
+  const handleZoomOut = () => {
+    setZoomIn(zoomIn - 0.1)
     setCameraChanged(true)
   }
   const decrementAction = () => {
@@ -312,7 +327,11 @@ const Home: NextPage = () => {
                     />
                   }
                 >
-                  <Shirt canvasRef={canvasRef} setLoading={setLoading} />
+                  {svgLoading ? (
+                    <span>loading...</span>
+                  ) : (
+                    <Shirt canvasRef={canvasRef} setLoading={setLoading} />
+                  )}
                   <Environment preset="city" />
                 </Suspense>
                 <OrbitControls
@@ -329,7 +348,8 @@ const Home: NextPage = () => {
                   isObjectFront={isObjectFront}
                   cameraChanged={cameraChanged}
                   setCameraChanged={setCameraChanged}
-                  zoom={zoom}
+                  zoomIn={zoomIn}
+                  zoomOut={zoomOut}
                 />
                 <AdaptiveDpr />
                 <Stats showPanel={0} />
@@ -339,7 +359,13 @@ const Home: NextPage = () => {
 
           <div className="mb-3 mt-5">
             <div className="flex overflow-hidden md:justify-between">
-              <div className="inline-flex flex-col items-center">
+              <div
+                onClick={(e: any) =>
+                  setStep(1)
+                }
+                className="inline-flex flex-col items-center"
+                style={{ cursor: 'pointer' }}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',
@@ -358,7 +384,14 @@ const Home: NextPage = () => {
                   choose your style
                 </Text>
               </div>
-              <div className="inline-flex flex-col items-center">
+              <div
+                onClick={(e: any) =>
+                  
+                  setStep(2)
+                }
+                className="inline-flex flex-col items-center"
+                style={{ cursor: 'pointer' }}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',
@@ -377,7 +410,14 @@ const Home: NextPage = () => {
                   choose your colours
                 </Text>
               </div>
-              <div className="inline-flex flex-col items-center">
+              <div
+                onClick={(e: any) =>
+                  
+                  setStep(3)
+                }
+                className="inline-flex flex-col items-center"
+                style={{ cursor: 'pointer' }}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',
@@ -418,7 +458,7 @@ const Home: NextPage = () => {
                     //   }
                     // }
                     className={cn(
-                      'cursor-pointer w-full justify-center items-center',
+                      'cursor-pointer w-full justify-center items-center  hover:border hover:border-pink-600',
                       {
                         ['border border-pink-600']: texturePath === index + 1,
                       }
@@ -442,7 +482,7 @@ const Home: NextPage = () => {
                     <button
                       type="button"
                       className={cn(
-                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600',
+                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2'
                       )}
                     >
                       {text}
@@ -705,7 +745,10 @@ const Home: NextPage = () => {
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
           <div className="relative">
-            <DropdownControls setZoom={handleZoom} />
+            <DropdownControls
+              setZoomIn={handleZoomIn}
+              setZoomOut={handleZoomOut}
+            />
           </div>
           <div className="relative">
             <button
@@ -759,7 +802,11 @@ const Home: NextPage = () => {
                   />
                 }
               >
-                <Shirt canvasRef={canvasRef} setLoading={setLoading} />
+                {svgLoading ? (
+                  <span>loading...</span>
+                ) : (
+                  <Shirt canvasRef={canvasRef} setLoading={setLoading} />
+                )}
                 <Environment preset="city" />
               </Suspense>
               <OrbitControls
@@ -776,7 +823,8 @@ const Home: NextPage = () => {
                 isObjectFront={isObjectFront}
                 cameraChanged={cameraChanged}
                 setCameraChanged={setCameraChanged}
-                zoom={zoom}
+                zoomIn={zoomIn}
+                zoomOut={zoomOut}
               />
               <AdaptiveDpr />
               <Stats showPanel={0} />

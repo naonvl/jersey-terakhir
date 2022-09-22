@@ -12,13 +12,15 @@ import { LayoutFill } from '@components/Image'
 interface DropdownsProps {
   rootClass?: string
   menuClass?: string
-  setZoom?: any
+  setZoomIn?: any
+  setZoomOut? :any
 }
 
 const DropdownControls: React.FC<DropdownsProps> = ({
   rootClass,
   menuClass,
-  setZoom
+  setZoomIn,
+  setZoomOut
 }) => {
   const buttonRef = useRef(null)
   const [open, setOpen] = useState<boolean>(true)
@@ -65,10 +67,10 @@ const DropdownControls: React.FC<DropdownsProps> = ({
       >
         <Menu.Items className={menuClasses} static>
           <div className="w-full">
-            <div onClick={()=> setZoom(10)} className="flex overflow-hidden bg-gray-100 border-b border-l border-r border-gray-400 w-full items-center justify-center cursor-pointer p-2">
+            <div onClick={()=> setZoomIn()} className="flex overflow-hidden bg-gray-100 border-b border-l border-r border-gray-400 w-full items-center justify-center cursor-pointer p-2">
               <ZoomInIcon className="h-5 w-5" />
             </div>
-            <div className="flex overflow-hidden bg-gray-100 border-b border-l border-r border-gray-400 w-full items-center justify-center cursor-pointer p-2">
+            <div onClick={()=> setZoomOut()} className="flex overflow-hidden bg-gray-100 border-b border-l border-r border-gray-400 w-full items-center justify-center cursor-pointer p-2">
               <ZoomOutIcon className="h-5 w-5" />
             </div>
             <div className="flex overflow-hidden bg-gray-100 border-b border-l border-r border-gray-400 w-full items-center justify-center cursor-pointer p-2">
