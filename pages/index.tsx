@@ -62,12 +62,19 @@ const Dolly = ({
   isObjectFront,
   cameraChanged,
   setCameraChanged,
+  zoom,
 }: {
   isObjectFront: boolean
   cameraChanged: boolean
   setCameraChanged: any
+  zoom: any
 }) => {
   useFrame((state) => {
+    if (zoom && cameraChanged) {
+      state.camera.zoom = zoom
+      state.camera.updateProjectionMatrix()
+      setCameraChanged(false)
+    }
     if (!isObjectFront && cameraChanged) {
       state.camera.position.z = -500
       setCameraChanged(false)
@@ -96,6 +103,7 @@ const Home: NextPage = () => {
   const [width, setWidth] = useState<number>(1400)
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const [texturePath, setTexturePath] = useState(1)
+  const [zoom, setZoom] = useState(1)
   const [isLoading, setLoading] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
@@ -192,7 +200,10 @@ const Home: NextPage = () => {
     setIsObjectFront(!isObjectFront)
     setCameraChanged(true)
   }
-
+  const handleZoom = () => {
+    setZoom(zoom + 0.2)
+    setCameraChanged(true)
+  }
   const decrementAction = () => {
     if (order == 1) {
       return setOrder(1)
@@ -272,8 +283,8 @@ const Home: NextPage = () => {
                 performance={{ min: 0.1, max: 0.3 }}
                 camera={{ position: [0, 0, 500], fov: 30 }}
                 style={{
-                  width: '596px',
-                  height: '599px',
+                  // width: '596px',
+                  height: '400px',
                 }}
                 id="rendered"
               >
@@ -318,6 +329,7 @@ const Home: NextPage = () => {
                   isObjectFront={isObjectFront}
                   cameraChanged={cameraChanged}
                   setCameraChanged={setCameraChanged}
+                  zoom={zoom}
                 />
                 <AdaptiveDpr />
                 <Stats showPanel={0} />
@@ -399,7 +411,18 @@ const Home: NextPage = () => {
               <div className="flex overflow-hidden">
                 {jerseyStyles.map(({ text, image }, index) => (
                   <div
-                    className=" cursor-pointer w-full justify-center items-center"
+                    // className={
+                    //   cn('cursor-pointer w-full justify-center items-center'),
+                    //   {
+                    //     ['border border-pink-600']: texturePath === index + 1,
+                    //   }
+                    // }
+                    className={cn(
+                      'cursor-pointer w-full justify-center items-center',
+                      {
+                        ['border border-pink-600']: texturePath === index + 1,
+                      }
+                    )}
                     onClick={() => {
                       handleChangeTexture(index)
                     }}
@@ -420,9 +443,6 @@ const Home: NextPage = () => {
                       type="button"
                       className={cn(
                         'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600',
-                        {
-                          ['border border-pink-600']: texturePath === index + 1,
-                        }
                       )}
                     >
                       {text}
@@ -685,7 +705,7 @@ const Home: NextPage = () => {
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
           <div className="relative">
-            <DropdownControls />
+            <DropdownControls setZoom={handleZoom} />
           </div>
           <div className="relative">
             <button
@@ -756,21 +776,36 @@ const Home: NextPage = () => {
                 isObjectFront={isObjectFront}
                 cameraChanged={cameraChanged}
                 setCameraChanged={setCameraChanged}
+                zoom={zoom}
               />
               <AdaptiveDpr />
               <Stats showPanel={0} />
             </ThreeCanvas>
           </Suspense>
-          <div className="flex" style={{ alignContent: 'center',justifyContent:'center' }}>
+          <div
+            className="flex"
+            style={{ alignContent: 'center', justifyContent: 'center' }}
+          >
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDI_3HAdsHWcd81rxQzF4K5Ti7JsTlNR0IMkqCZjiJwQqObnAf30OqgYRtY3pWGelQO3A&usqp=CAU"
               width={50}
               alt=""
-              style={{height:'30px'}}
+              style={{ height: '30px' }}
             />
-            <div className='flex' style={{ alignContent: 'center', marginLeft:'50px' }}>
+            <div
+              className="flex"
+              style={{ alignContent: 'center', marginLeft: '50px' }}
+            >
               <img src="/faq-icon.jpg" width={40} alt="" />
-              <span style={{fontSize:'14px', marginLeft:'10px', lineHeight:'2.5'}}>Do you have question ?</span>
+              <span
+                style={{
+                  fontSize: '14px',
+                  marginLeft: '10px',
+                  lineHeight: '2.5',
+                }}
+              >
+                Do you have question ?
+              </span>
             </div>
           </div>
           <h4

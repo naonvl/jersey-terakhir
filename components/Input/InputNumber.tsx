@@ -44,7 +44,7 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(
     const plusRef = useRef<HTMLDivElement>(null)
 
     const rootClasses = cn(
-      'flex border border-1 relative rounded-[0.25rem] h-[3.5rem] md:items-center items-stretch md:my-auto',
+      'flex border border-1 relative rounded-[0.25rem] h-[3.5rem] md:items-center items-stretch md:my-auto wrapper',
       {
         ['bg-[#EBEBEB] border-[#D4D4D4] text-[#2F2F2F]']: disabled,
       },

@@ -3,9 +3,19 @@
 @tailwind utilities;
 @import './custom.css';
 
+.focus\:ring-pink-500:focus{
+  --tw-ring-opacity: 0 !important;
+}
+.focus\:ring-2:focus{
+  --tw-ring-shadow: none !important;
+}
 @layer base {
   *,.font-sans{
     font-family: Chivo,Arial,Tahoma,Verdana,sans-serif;
+  }
+  .wrapper{
+    max-width:115px;
+    border-radius: 0;
   }
   input::-webkit-slider-runnable-track {
     -webkit-appearance: none;
