@@ -146,8 +146,7 @@ const Home: NextPage = () => {
   const [colorList, setColorList] = useState<SvgData | null>(null)
   const [svgGroup, setSvgGroup]: any = useState([])
   const loadSvg = (path: number) => {
-    console.log('s')
-
+    setSvgGroup([])
     fabric.loadSVGFromURL(
       `/textures/Jersey_COLOR${path}.svg`,
       (objects, options) => {
@@ -175,10 +174,6 @@ const Home: NextPage = () => {
   }
   const initColors = (svgData: any) => {
     for (let i = 0; i < svgData.length; i++) {
-      // colors.push({
-      //   id: svgData[i].id,
-      //   color: svgData[i].fill,
-      // })
       colors[i] = {
         id: svgData[i].id,
         color: svgData[i].fill,
@@ -187,14 +182,12 @@ const Home: NextPage = () => {
     console.log(colors)
   }
   const addText = (text: any) => {
-    console.log(text);
-    
     var jerseyName = new fabric.IText(text, {
-      fontSize: 50,
+      fontSize: 100,
       textAlign: 'center',
       fontWeight: 'bold',
-      left: 370,
-      top: 500,
+      left: 100,
+      top: 300,
       originX: 'center',
       originY: 'center',
       selectable: true,
@@ -205,6 +198,7 @@ const Home: NextPage = () => {
       canvasRef.current.add(jerseyName)
       canvasRef.current.setActiveObject(jerseyName)
       canvasRef.current.renderAll()
+      console.log(canvasRef.current.getObjects())
     }
   }
   const initCanvas = () =>
@@ -231,7 +225,7 @@ const Home: NextPage = () => {
     // }, 2500);
     console.log(width)
     loadSvg(1)
-    addText('s')
+    addText('Nama')
     canvasRef.current = initCanvas()
     // cleanup
     return () => {
