@@ -147,11 +147,11 @@ const Home: NextPage = () => {
   const loadSvg = (path: number) => {
     setSvgGroup([])
     fabric.loadSVGFromURL(
-      `/textures/Jersey_COLOR${path}.svg`,
+      `/textures/Jersey_COLOR${path}-low.svg`,
       (objects, options) => {
         const svgData = fabric.util.groupSVGElements(objects, {
-          width: 1024,
-          height: 1024,
+          width: 512,
+          height: 512,
           selectable: false,
           crossOrigin: 'anonymous',
         }) as any
@@ -202,8 +202,8 @@ const Home: NextPage = () => {
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      width: 1024,
-      height: 1024,
+      width: 512,
+      height: 512,
       selection: false,
     })
   const [dropdownOpen, setDropdownOpen] = useState({

@@ -138,8 +138,8 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
           attach="material"
           roughness={1}
           emissive={1}
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
           map={texture.current}
           color="#ccc"
         />
@@ -152,11 +152,11 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       >
         <meshStandardMaterial
           attach="material"
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
           map={texture.current}
-          aoMap={aoMapout}
-          aoMapIntensity={0.5}
+          // aoMap={aoMapout}
+          // aoMapIntensity={0.5}
         >
           <texture attach="map" image={canvasRef} ref={texture} />
         </meshStandardMaterial>
@@ -170,11 +170,11 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       >
         <meshStandardMaterial
           attach="material"
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
           map={texture.current}
-          aoMap={aoMapzipp}
-          aoMapIntensity={0.7}
+          // aoMap={aoMapzipp}
+          // aoMapIntensity={0.7}
         >
           <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
@@ -186,11 +186,11 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       >
         <meshStandardMaterial
           attach="material"
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
           map={texture.current}
-          aoMap={aoMapzipp}
-          aoMapIntensity={0.7}
+          // aoMap={aoMapzipp}
+          // aoMapIntensity={0.7}
         >
           <texture attach="map" image={canvasRef} />
         </meshStandardMaterial>
