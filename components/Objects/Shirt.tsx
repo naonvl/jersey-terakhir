@@ -48,14 +48,18 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
   const texture = useRef<THREE.Texture | null>(null)
 
   // Textures
+  // const [normalMap] = useLoader(TextureLoader, ['/textures/NormalMap.jpg'])
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
   const [aoMapout] = useLoader(TextureLoader, ['/textures/ao_out.png'])
+  const [bump] = useLoader(TextureLoader, ['/textures/DisplacementMap.jpg'])
+  const [displace] = useLoader(TextureLoader, ['/textures/displace.jpg'])
+  bump.flipY = false
   const [aoMapzipp] = useLoader(TextureLoader, ['/textures/ao_zip.png'])
 
   const [hovered, setHovered] = useState(false)
   const [clicked, setClicked] = useState(false)
 
-  const { nodes } = useGLTF('/cycling-jersey.drc.glb') as GLTFResult
+  const { nodes } = useGLTF('/s-cycling-jersey.drc.glb') as GLTFResult
   // const { start, pause, reset, status } = useTimer()
 
   useFrame(() => {
@@ -84,10 +88,9 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
   useFrame((state) => {
     if (canvasRef.current) {
       texture.current = new THREE.Texture(canvasRef.current.getElement())
-      texture.current.anisotropy = gl.capabilities.getMaxAnisotropy()
+      // texture.current.anisotropy = gl.capabilities.getMaxAnisotropy()
       texture.current.needsUpdate = true
       texture.current.flipY = false
-      texture.current.needsUpdate = true
       canvasRef.current.renderAll()
     }
 
@@ -139,8 +142,11 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
           attach="material"
           roughness={1}
           emissive={1}
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          bumpMap={bump}
+          bumpScale={0.03}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
+          // normalScale={new THREE.Vector2( 0.01,0.01 )}
           map={texture.current}
           color="#ccc"
         />
@@ -153,8 +159,14 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       >
         <meshStandardMaterial
           attach="material"
-          normalMap={normalMap}
-          normalMap-flipY={false}
+          // displacementScale={0.001}
+          bumpMap={bump}
+          roughness={0.7}
+          emissive={1}
+          bumpScale={0.03}
+          // normalMap={normalMap}
+          // normalMap-flipY={false}
+          // normalScale={new THREE.Vector2( 0.01,0.01 )}
           map={texture.current}
           aoMap={aoMapout}
           aoMapIntensity={0.5}

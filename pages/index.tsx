@@ -50,10 +50,6 @@ const jerseyStyles = [
     text: 'Climber',
     image: '/thumbnails/climber_front_2022.jpg',
   },
-  {
-    text: 'Bubbles',
-    image: '/thumbnails/bubbles_front_2022.jpg',
-  },
 ]
 
 const options = [
@@ -151,8 +147,8 @@ const Home: NextPage = () => {
       `/textures/Jersey_COLOR${path}.svg`,
       (objects, options) => {
         const svgData = fabric.util.groupSVGElements(objects, {
-          width: 1024,
-          height: 1024,
+          width: 2048,
+          height: 2048,
           selectable: false,
           crossOrigin: 'anonymous',
         }) as any
@@ -160,7 +156,7 @@ const Home: NextPage = () => {
         svgData.left = 0
         setSvgGroup(svgData)
         initColors(svgData._objects)
-        addText('Nama')
+        // addText('Nama')
         if (canvasRef.current) {
           if (canvasRef.current._objects[0] != undefined) {
             canvasRef.current.remove(canvasRef.current._objects[0])
@@ -203,8 +199,8 @@ const Home: NextPage = () => {
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      width: 1024,
-      height: 1024,
+      width: 2048,
+      height: 2048,
       selection: false,
     })
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -223,7 +219,7 @@ const Home: NextPage = () => {
     //   setSvgLoading(false)
     // }, 2500);
     console.log(width)
-    loadSvg(1)
+    loadSvg(6)
     canvasRef.current = initCanvas()
     // cleanup
     return () => {
@@ -868,8 +864,22 @@ const Home: NextPage = () => {
               }}
               id="rendered"
             >
-              <ambientLight intensity={1} />
               <spotLight
+                intensity={0.5}
+                angle={0.3}
+                penumbra={1}
+                position={[10, 50, 50]}
+                castShadow
+              />
+              <spotLight
+                intensity={0.5}
+                angle={0.3}
+                penumbra={1}
+                position={[10, 50, -50]}
+                castShadow
+              />
+              <ambientLight intensity={0.4} />
+              {/* <spotLight
                 intensity={1}
                 angle={0.3}
                 penumbra={1}
@@ -882,7 +892,7 @@ const Home: NextPage = () => {
                 penumbra={1}
                 position={[10, 50, -50]}
                 castShadow
-              />
+              /> */}
               <Suspense
                 fallback={
                   <Loader
