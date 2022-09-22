@@ -144,14 +144,15 @@ const Home: NextPage = () => {
   const [colorChanged, setColorChanged] = useState<boolean>(false)
   const [colorList, setColorList] = useState<SvgData | null>(null)
   const [svgGroup, setSvgGroup]: any = useState([])
+
   const loadSvg = (path: number) => {
     setSvgGroup([])
     fabric.loadSVGFromURL(
-      `/textures/Jersey_COLOR${path}-low.svg`,
+      `/textures/Jersey_COLOR${path}.svg`,
       (objects, options) => {
         const svgData = fabric.util.groupSVGElements(objects, {
-          width: 512,
-          height: 512,
+          width: 1024,
+          height: 1024,
           selectable: false,
           crossOrigin: 'anonymous',
         }) as any
@@ -202,8 +203,8 @@ const Home: NextPage = () => {
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      width: 512,
-      height: 512,
+      width: 1024,
+      height: 1024,
       selection: false,
     })
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -294,10 +295,9 @@ const Home: NextPage = () => {
   }
   const handleChangeText = (e: any) => {
     if (canvasRef.current) {
-      (canvasRef.current.getObjects()[1] as any).text = e.target.value
+      ;(canvasRef.current.getObjects()[1] as any).text = e.target.value
       canvasRef.current.renderAll()
-      console.log((canvasRef.current.getObjects()[1] as any).text);
-      
+      console.log((canvasRef.current.getObjects()[1] as any).text)
     }
   }
 
@@ -401,6 +401,7 @@ const Home: NextPage = () => {
                   <Environment preset="city" />
                 </Suspense>
                 <OrbitControls
+                enableDamping={false}
                   minPolarAngle={Math.PI / 4}
                   maxPolarAngle={Math.PI / 1.4}
                   minDistance={20}
@@ -900,6 +901,7 @@ const Home: NextPage = () => {
               </Suspense>
 
               <OrbitControls
+                enableDamping={false}
                 minPolarAngle={Math.PI / 4}
                 maxPolarAngle={Math.PI / 1.4}
                 minDistance={20}
