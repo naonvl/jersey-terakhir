@@ -19,7 +19,12 @@ import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Canvas as ThreeCanvas, useFrame, extend, useThree  } from '@react-three/fiber'
+import {
+  Canvas as ThreeCanvas,
+  useFrame,
+  extend,
+  useThree,
+} from '@react-three/fiber'
 import {
   SpotLight,
   OrbitControls,
@@ -31,7 +36,7 @@ import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import { Shirt } from '@components/Objects'
 import Loader from '@components/Scene/Loader'
 import { fabric } from 'fabric'
-extend({ OrbitControls });
+extend({ OrbitControls })
 const jerseyStyles = [
   {
     text: 'Champion',
@@ -57,6 +62,7 @@ const options = [
     text: 'Roboto',
   },
 ]
+const colors: any[] = []
 const CameraControls = () => {
   // Get a reference to the Three.js Camera, and the canvas html element.
   // We need these to setup the OrbitControls component.
@@ -64,12 +70,12 @@ const CameraControls = () => {
   const {
     camera,
     gl: { domElement },
-  } = useThree();
+  } = useThree()
   // Ref to the controls, so that we can update them on every frame using useFrame
-  const controls : any = useRef();
-  useFrame((state) => controls.current.update());
-  return <orbitControls ref={controls} args={[camera, domElement]} />;
-};
+  const controls: any = useRef()
+  useFrame((state) => controls.current.update())
+  return <orbitControls ref={controls} args={[camera, domElement]} />
+}
 const Dolly = ({
   isObjectFront,
   cameraChanged,
@@ -107,6 +113,10 @@ const Dolly = ({
 
   return null
 }
+interface SvgData {
+  id: string
+  color: string
+}
 interface LoadSVGProps {
   path: number
   canvas: MutableRefObject<fabric.Canvas | null>
@@ -114,7 +124,6 @@ interface LoadSVGProps {
   height?: number
   setLoading: Dispatch<SetStateAction<boolean>>
 }
-
 const Home: NextPage = () => {
   const inputNumberRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
@@ -128,7 +137,11 @@ const Home: NextPage = () => {
   const [svgLoading, setSvgLoading] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
+  const [colorList, setColorList] = useState<SvgData | null>(null)
+  const [svgGroup, setSvgGroup]: any = useState([])
   const loadSvg = (path: number) => {
+    console.log('s')
+
     fabric.loadSVGFromURL(
       `/textures/Jersey_COLOR${path}.svg`,
       (objects, options) => {
@@ -137,9 +150,12 @@ const Home: NextPage = () => {
           height: 1024,
           selectable: false,
           crossOrigin: 'anonymous',
-        })
+        }) as any
         svgData.top = 0
         svgData.left = 0
+        setSvgGroup(svgData)
+        initColors(svgData._objects)
+        console.log()
         if (canvasRef.current) {
           if (canvasRef.current._objects[0] != undefined) {
             canvasRef.current.remove(canvasRef.current._objects[0])
@@ -151,6 +167,19 @@ const Home: NextPage = () => {
         }
       }
     )
+  }
+  const initColors = (svgData: any) => {
+    for (let i = 0; i < svgData.length; i++) {
+      // colors.push({
+      //   id: svgData[i].id,
+      //   color: svgData[i].fill,
+      // })
+      colors[i] = {
+        id: svgData[i].id,
+        color: svgData[i].fill,
+      }
+    }
+    console.log(colors)
   }
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
@@ -184,7 +213,6 @@ const Home: NextPage = () => {
     }
   }, [])
   useEffect(() => {
-    loadSvg(1)
     switch (step) {
       case 1:
         return setDropdownOpen({
@@ -224,7 +252,7 @@ const Home: NextPage = () => {
     setCameraChanged(true)
   }
   const handleZoomIn = () => {
-    setZoomIn(zoomIn+ 0.3)
+    setZoomIn(zoomIn + 0.3)
     setCameraChanged(true)
   }
   const handleZoomOut = () => {
@@ -372,9 +400,7 @@ const Home: NextPage = () => {
           <div className="mb-3 mt-5">
             <div className="flex overflow-hidden md:justify-between">
               <div
-                onClick={(e: any) =>
-                  setStep(1)
-                }
+                onClick={(e: any) => setStep(1)}
                 className="inline-flex flex-col items-center"
                 style={{ cursor: 'pointer' }}
               >
@@ -397,10 +423,7 @@ const Home: NextPage = () => {
                 </Text>
               </div>
               <div
-                onClick={(e: any) =>
-                  
-                  setStep(2)
-                }
+                onClick={(e: any) => setStep(2)}
                 className="inline-flex flex-col items-center"
                 style={{ cursor: 'pointer' }}
               >
@@ -423,10 +446,7 @@ const Home: NextPage = () => {
                 </Text>
               </div>
               <div
-                onClick={(e: any) =>
-                  
-                  setStep(3)
-                }
+                onClick={(e: any) => setStep(3)}
                 className="inline-flex flex-col items-center"
                 style={{ cursor: 'pointer' }}
               >
@@ -512,7 +532,7 @@ const Home: NextPage = () => {
               menuClass="w-full"
               label="stepTwo"
             >
-              <div className="flex flex-col overflow-hidden">
+              {/* <div className="flex flex-col overflow-hidden">
                 <div className="inline-flex w-full justify-between items-center">
                   <SketchPicker color={{ r: 241, g: 19, b: 127, a: 100 }} />
                   <Text className="font-bold text-gray-600">
@@ -617,6 +637,39 @@ const Home: NextPage = () => {
                     quality={60}
                   />
                 </div>
+              </div> */}
+              <div className="flex flex-col overflow-hidden">
+                {colors.map((data, index) => (
+                  <div
+                    key={index}
+                    className="inline-flex w-full justify-between items-center"
+                  >
+                    <SketchPicker
+                      color={data.color}
+                      setCurrentColor={(e: string) => {
+                        svgGroup._objects[index].set('fill', e)
+                        canvasRef.current?.renderAll()
+                      }}
+                    />
+                    <Text className="font-bold text-gray-600">
+                      {data.id} or{' '}
+                      <span className="underline cursor-pointer">
+                        Choose Pattern
+                      </span>
+                    </Text>
+                    <LayoutFill
+                      alt="Cyclist Cusotm Jersey"
+                      src="/kein-muster.svg"
+                      width="100%"
+                      height={35}
+                      style={{
+                        maxWidth: '60px',
+                      }}
+                      objectFit="contain"
+                      quality={60}
+                    />
+                  </div>
+                ))}
               </div>
             </Dropdowns>
 
@@ -757,9 +810,7 @@ const Home: NextPage = () => {
         </div>
         <div className="mx-5 lg:w-1/2 hidden lg:block">
           <div className="relative">
-            <DropdownControls
-              setZoomIn={handleZoomIn}
-            />
+            <DropdownControls setZoomIn={handleZoomIn} />
           </div>
           <div className="relative">
             <button
@@ -820,7 +871,7 @@ const Home: NextPage = () => {
                 )}
                 <Environment preset="city" />
               </Suspense>
-              
+
               <OrbitControls
                 minPolarAngle={Math.PI / 4}
                 maxPolarAngle={Math.PI / 1.4}
