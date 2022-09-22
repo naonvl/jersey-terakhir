@@ -87,8 +87,7 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       texture.current.anisotropy = gl.capabilities.getMaxAnisotropy()
       texture.current.needsUpdate = true
       texture.current.flipY = false
-
-      texture.current.needsUpdate = true
+      canvasRef.current.renderAll()
     }
 
     // if (status === 'RUNNING' && groupRef.current) {
@@ -157,7 +156,7 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
           normalMap-flipY={false}
           map={texture.current}
           aoMap={aoMapout}
-          aoMapIntensity={0.7}
+          aoMapIntensity={0.5}
         >
           <texture attach="map" image={canvasRef} ref={texture} />
         </meshStandardMaterial>

@@ -91,7 +91,6 @@ const Dolly = ({
 }) => {
   useFrame((state) => {
     if (colorChanged) {
-      console.log('sss')
       state.camera.position.z = state.camera.position.z + 0.001
       setCameraChanged(false)
     }
@@ -160,6 +159,7 @@ const Home: NextPage = () => {
         svgData.left = 0
         setSvgGroup(svgData)
         initColors(svgData._objects)
+        addText('Nama')
         if (canvasRef.current) {
           if (canvasRef.current._objects[0] != undefined) {
             canvasRef.current.remove(canvasRef.current._objects[0])
@@ -183,11 +183,11 @@ const Home: NextPage = () => {
   }
   const addText = (text: any) => {
     var jerseyName = new fabric.IText(text, {
-      fontSize: 100,
+      fontSize: 30,
       textAlign: 'center',
       fontWeight: 'bold',
-      left: 100,
-      top: 300,
+      left: 380,
+      top: 520,
       originX: 'center',
       originY: 'center',
       selectable: true,
@@ -196,9 +196,7 @@ const Home: NextPage = () => {
     })
     if (canvasRef.current) {
       canvasRef.current.add(jerseyName)
-      canvasRef.current.setActiveObject(jerseyName)
       canvasRef.current.renderAll()
-      console.log(canvasRef.current.getObjects())
     }
   }
   const initCanvas = () =>
@@ -225,7 +223,6 @@ const Home: NextPage = () => {
     // }, 2500);
     console.log(width)
     loadSvg(1)
-    addText('Nama')
     canvasRef.current = initCanvas()
     // cleanup
     return () => {
@@ -294,6 +291,14 @@ const Home: NextPage = () => {
 
   const handleChange = (e: any) => {
     setAddStep({ ...addStep, [e.target.name]: e.target.value })
+  }
+  const handleChangeText = (e: any) => {
+    if (canvasRef.current) {
+      (canvasRef.current.getObjects()[1] as any).text = e.target.value
+      canvasRef.current.renderAll()
+      console.log((canvasRef.current.getObjects()[1] as any).text);
+      
+    }
   }
 
   const handlePrev = () => {
@@ -715,10 +720,10 @@ const Home: NextPage = () => {
                     id="addName"
                     type="text"
                     className="border border-black placeholder:text-gray-700 text-black px-3 py-2 focus:border-pink-500 focus:ring-pink-500"
-                    onChange={handleChange}
+                    onChange={handleChangeText}
                     placeholder="Type your name"
                     name="name"
-                    value={addStep.name}
+                    // value={addStep.name}
                   />
                 </div>
                 <div className="inline-flex flex-col mb-3">
