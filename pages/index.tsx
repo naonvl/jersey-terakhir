@@ -19,7 +19,7 @@ import { LayoutFill } from '@components/Image'
 import { SketchPicker } from '@components/ColorPicker'
 import { Select } from '@components/Input'
 import InputNumber from '@components/Input/InputNumber'
-import { Canvas as ThreeCanvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas as ThreeCanvas, useFrame, extend, useThree  } from '@react-three/fiber'
 import {
   SpotLight,
   OrbitControls,
@@ -31,7 +31,7 @@ import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import { Shirt } from '@components/Objects'
 import Loader from '@components/Scene/Loader'
 import { fabric } from 'fabric'
-
+extend({ OrbitControls });
 const jerseyStyles = [
   {
     text: 'Champion',
@@ -57,7 +57,19 @@ const options = [
     text: 'Roboto',
   },
 ]
-
+const CameraControls = () => {
+  // Get a reference to the Three.js Camera, and the canvas html element.
+  // We need these to setup the OrbitControls component.
+  // https://threejs.org/docs/#examples/en/controls/OrbitControls
+  const {
+    camera,
+    gl: { domElement },
+  } = useThree();
+  // Ref to the controls, so that we can update them on every frame using useFrame
+  const controls : any = useRef();
+  useFrame((state) => controls.current.update());
+  return <orbitControls ref={controls} args={[camera, domElement]} />;
+};
 const Dolly = ({
   isObjectFront,
   cameraChanged,
@@ -77,11 +89,11 @@ const Dolly = ({
       state.camera.updateProjectionMatrix()
       setCameraChanged(false)
     }
-    if (zoomOut && cameraChanged) {
-      state.camera.zoom = zoomOut
-      state.camera.updateProjectionMatrix()
-      setCameraChanged(false)
-    }
+    // if (zoomOut && cameraChanged) {
+    //   state.camera.zoom = zoomOut
+    //   state.camera.updateProjectionMatrix()
+    //   setCameraChanged(false)
+    // }
     if (!isObjectFront && cameraChanged) {
       state.camera.position.z = -500
       setCameraChanged(false)
@@ -212,7 +224,7 @@ const Home: NextPage = () => {
     setCameraChanged(true)
   }
   const handleZoomIn = () => {
-    setZoomIn(zoomIn + 0.1)
+    setZoomIn(zoomIn+ 0.3)
     setCameraChanged(true)
   }
   const handleZoomOut = () => {
@@ -288,7 +300,7 @@ const Home: NextPage = () => {
         </Text>
       </div>
 
-      <div className="flex px-4 lg:px-16 flex-col lg:flex-row max-w-[1400px] mx-auto">
+      <div className="flex px-2 lg:px-16 flex-col lg:flex-row max-w-[1400px] mx-auto">
         <div className="lg:w-1/2">
           {/* Mobile */}
           <div className="my-5 lg:hidden">
@@ -747,7 +759,6 @@ const Home: NextPage = () => {
           <div className="relative">
             <DropdownControls
               setZoomIn={handleZoomIn}
-              setZoomOut={handleZoomOut}
             />
           </div>
           <div className="relative">
@@ -809,6 +820,7 @@ const Home: NextPage = () => {
                 )}
                 <Environment preset="city" />
               </Suspense>
+              
               <OrbitControls
                 minPolarAngle={Math.PI / 4}
                 maxPolarAngle={Math.PI / 1.4}
