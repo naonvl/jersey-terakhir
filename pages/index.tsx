@@ -81,15 +81,20 @@ const Dolly = ({
   cameraChanged,
   setCameraChanged,
   zoomIn,
-  zoomOut,
+  colorChanged,
 }: {
   isObjectFront: boolean
   cameraChanged: boolean
   setCameraChanged: any
   zoomIn: any
-  zoomOut: any
+  colorChanged: any
 }) => {
   useFrame((state) => {
+    if (colorChanged) {
+      console.log('sss')
+      state.camera.position.z = state.camera.position.z + 0.001
+      setCameraChanged(false)
+    }
     if (zoomIn && cameraChanged) {
       state.camera.zoom = zoomIn
       state.camera.updateProjectionMatrix()
@@ -137,6 +142,7 @@ const Home: NextPage = () => {
   const [svgLoading, setSvgLoading] = useState<boolean>(true)
   const [isObjectFront, setIsObjectFront] = useState<boolean>(true)
   const [cameraChanged, setCameraChanged] = useState<boolean>(false)
+  const [colorChanged, setColorChanged] = useState<boolean>(false)
   const [colorList, setColorList] = useState<SvgData | null>(null)
   const [svgGroup, setSvgGroup]: any = useState([])
   const loadSvg = (path: number) => {
@@ -155,7 +161,6 @@ const Home: NextPage = () => {
         svgData.left = 0
         setSvgGroup(svgData)
         initColors(svgData._objects)
-        console.log()
         if (canvasRef.current) {
           if (canvasRef.current._objects[0] != undefined) {
             canvasRef.current.remove(canvasRef.current._objects[0])
@@ -181,6 +186,27 @@ const Home: NextPage = () => {
     }
     console.log(colors)
   }
+  const addText = (text: any) => {
+    console.log(text);
+    
+    var jerseyName = new fabric.IText(text, {
+      fontSize: 50,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      left: 370,
+      top: 500,
+      originX: 'center',
+      originY: 'center',
+      selectable: true,
+      editable: true,
+      centeredScaling: true,
+    })
+    if (canvasRef.current) {
+      canvasRef.current.add(jerseyName)
+      canvasRef.current.setActiveObject(jerseyName)
+      canvasRef.current.renderAll()
+    }
+  }
   const initCanvas = () =>
     new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
@@ -205,6 +231,7 @@ const Home: NextPage = () => {
     // }, 2500);
     console.log(width)
     loadSvg(1)
+    addText('s')
     canvasRef.current = initCanvas()
     // cleanup
     return () => {
@@ -389,7 +416,7 @@ const Home: NextPage = () => {
                   cameraChanged={cameraChanged}
                   setCameraChanged={setCameraChanged}
                   zoomIn={zoomIn}
-                  zoomOut={zoomOut}
+                  colorChanged={colorChanged}
                 />
                 <AdaptiveDpr />
                 <Stats showPanel={0} />
@@ -649,6 +676,7 @@ const Home: NextPage = () => {
                       setCurrentColor={(e: string) => {
                         svgGroup._objects[index].set('fill', e)
                         canvasRef.current?.renderAll()
+                        setColorChanged(true)
                       }}
                     />
                     <Text className="font-bold text-gray-600">
@@ -887,7 +915,7 @@ const Home: NextPage = () => {
                 cameraChanged={cameraChanged}
                 setCameraChanged={setCameraChanged}
                 zoomIn={zoomIn}
-                zoomOut={zoomOut}
+                colorChanged={colorChanged}
               />
               <AdaptiveDpr />
               <Stats showPanel={0} />

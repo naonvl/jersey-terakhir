@@ -137,13 +137,16 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
       >
         <meshStandardMaterial
           attach="material"
+          roughness={1}
+          emissive={1}
           normalMap={normalMap}
           normalMap-flipY={false}
           map={texture.current}
-          color="#fff"
+          color="#ccc"
         />
       </mesh>
       <mesh
+        onClick={(e) => console.log('you clicked', e)}
         geometry={nodes.M740158_mesh_out.geometry}
         material={nodes.M740158_mesh_out.material}
         scale={100}
