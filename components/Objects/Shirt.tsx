@@ -169,7 +169,7 @@ const Shirt: React.FC<ShirtProps> = ({ props, canvasRef, setLoading }) => {
           // normalScale={new THREE.Vector2( 0.01,0.01 )}
           map={texture.current}
           aoMap={aoMapout}
-          aoMapIntensity={0.5}
+          aoMapIntensity={0.7}
         >
           <texture attach="map" image={canvasRef} ref={texture} />
         </meshStandardMaterial>
